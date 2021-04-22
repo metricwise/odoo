@@ -180,11 +180,7 @@ import werkzeug.wsgi
 from werkzeug.urls import URL, url_parse, url_encode, url_quote
 from werkzeug.exceptions import (HTTPException, BadRequest, Forbidden,
                                  NotFound, InternalServerError)
-try:
-    from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
-    ProxyFix = functools.partial(ProxyFix_, x_for=1, x_proto=1, x_host=1)
-except ImportError:
-    from werkzeug.contrib.fixers import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
 
 try:
     from werkzeug.utils import send_file as _send_file
@@ -203,6 +199,12 @@ from .tools.misc import submap
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
+ProxyFix = functools.partial(ProxyFix_,
+    x_for=config['proxy_x_for'],
+    x_proto=config['proxy_x_proto'],
+    x_host=config['proxy_x_host'],
+    x_port=config['proxy_x_port'],
+    x_prefix=config['proxy_x_prefix'])
 
 _logger = logging.getLogger(__name__)
 
@@ -2341,7 +2343,7 @@ class Application:
         if hasattr(current_thread, 'uid'):
             del current_thread.uid
 
-        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+        if odoo.tools.config['proxy_mode']:
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
