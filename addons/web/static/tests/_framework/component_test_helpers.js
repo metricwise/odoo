@@ -8,6 +8,7 @@ import { getTemplate as getTemplateFn } from "@web/core/templates";
 import { isIterable } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { customDirectives, globalValues } from "@web/env";
 
 /**
  * @typedef {import("@odoo/hoot-dom").Target} Target
@@ -127,6 +128,7 @@ export async function mountWithCleanup(ComponentClass, options) {
         customDirectives,
         getTemplate,
         globalValues,
+        props: options?.props || {},
         templates,
         translatableAttributes,
         translateFn,
