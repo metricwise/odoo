@@ -94,6 +94,44 @@ test("view switcher", async () => {
     expect.verifySteps(["kanban"]);
 });
 
+test("view switcher (middle click)", async () => {
+    await mountWithSearch(
+        ControlPanel,
+        { resModel: "foo" },
+        {
+            viewSwitcherEntries: [
+                { type: "list", active: true, icon: "oi-view-list", name: "List" },
+                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+            ],
+        }
+    );
+    expect(`.o_control_panel_navigation .o_cp_switch_buttons`).toHaveCount(1);
+    expect(`.o_switch_view`).toHaveCount(2);
+
+    getService("action").switchView = (viewType, props, options) =>
+        expect.step(`${viewType} -- ${JSON.stringify(props)} -- ${JSON.stringify(options)}`);
+
+    await contains(".o_switch_view.o_kanban").click({ ctrlKey: true });
+    expect.verifySteps([`kanban -- {} -- {"newWindow":true}`]);
+});
+
+test("views aria labels", async () => {
+    await mountWithSearch(
+        ControlPanel,
+        { resModel: "foo" },
+        {
+            viewSwitcherEntries: [
+                { type: "list", active: true, icon: "oi-view-list", name: "List" },
+                { type: "kanban", icon: "oi-view-kanban", name: "Kanban" },
+            ],
+        }
+    );
+
+    const views = queryAll`.o_switch_view`;
+    expect(views[0]).toHaveAttribute("aria-label", "List View");
+    expect(views[1]).toHaveAttribute("aria-label", "Kanban View");
+});
+
 test.tags("mobile");
 test("view switcher on mobile", async () => {
     await mountWithSearch(
