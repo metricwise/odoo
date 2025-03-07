@@ -171,7 +171,8 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         })
         po_2 = self.env['purchase.order'].create({
             'partner_id': self.partner_a.id,
-            'currency_id': self.env['res.currency'].search([('name', '=', 'EUR')], limit=1).id,
+            # HACK Default company is now USD
+            'currency_id': self.env['res.currency'].search([('name', '=', 'USD')], limit=1).id,
             'order_line': [
                 (0, 0, {
                     'product_id': self.product_a.id,
