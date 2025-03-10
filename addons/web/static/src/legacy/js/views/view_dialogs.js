@@ -109,6 +109,7 @@ var FormViewDialog = ViewDialog.extend({
         this.deletable = options.deletable;
         this.editable = options.editable;
         this.disable_multiple_selection = options.disable_multiple_selection;
+        this.showChatter = options.showChatter || false;
         var oBtnRemove = 'o_btn_remove';
 
         var multi_select = !_.isNumber(options.res_id) && !options.disable_multiple_selection;
@@ -211,7 +212,7 @@ var FormViewDialog = ViewDialog.extend({
                 model: self.model,
                 parentID: self.parentID,
                 recordID: self.recordID,
-                isFromFormViewDialog: true,
+                isFromFormViewDialog: !self.showChatter,
                 editable: self.editable
             });
             return formview.getController(self);
