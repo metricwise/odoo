@@ -1735,11 +1735,12 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
                 rv.headers.pop('x-sendfile', None)
     return rv
 
-def content_disposition(filename):
+
+def content_disposition(filename, attachment=True):
     filename = odoo.tools.ustr(filename)
     escaped = urls.url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%')  # RFC6266
 
-    return "attachment; filename*=UTF-8''%s" % escaped
+    return "%s; filename*=UTF-8''%s" % ('attachment' if attachment else 'inline', escaped)
 
 
 def set_safe_image_headers(headers, content):
