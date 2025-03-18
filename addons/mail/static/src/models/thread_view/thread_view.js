@@ -128,7 +128,7 @@ function factory(dependencies) {
             if (!this.threadCache) {
                 return clear();
             }
-            const orderedMessages = this.threadCache.orderedNonEmptyMessages;
+            const orderedMessages = _.sortBy(this.threadCache.orderedNonEmptyMessages, 'date');
             if (this.order === 'desc') {
                 orderedMessages.reverse();
             }
