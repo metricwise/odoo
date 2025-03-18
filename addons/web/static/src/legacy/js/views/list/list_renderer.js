@@ -7,6 +7,7 @@ import core from 'web.core';
 import dom from 'web.dom';
 import field_utils from 'web.field_utils';
 import Pager from 'web.Pager';
+import pyUtils from 'web.py_utils';
 import utils from 'web.utils';
 import viewUtils from 'web.viewUtils';
 
@@ -473,10 +474,11 @@ var ListRenderer = BasicRenderer.extend({
                 if (!formatFunc) {
                     formatFunc = field_utils.format[field.type];
                 }
-                var formattedValue = formatFunc(value, field, {
+                var options = column.attrs.options ? pyUtils.py_eval(column.attrs.options) : {};
+                var formattedValue = formatFunc(value, field, _.extend(options, {
                     escape: true,
                     digits: column.attrs.digits ? JSON.parse(column.attrs.digits) : undefined,
-                });
+                }));
                 $cell.addClass('o_list_number').attr('title', help).html(formattedValue);
             }
             return $cell;

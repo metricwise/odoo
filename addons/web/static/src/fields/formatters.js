@@ -128,12 +128,12 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = (value || 0).toFixed(precision || 2).split(".");
-    formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
-    if (options.noTrailingZeros) {
-        formatted[1] = formatted[1].replace(/0+$/, "");
+    let [characteristic, mantissa] = (value || 0).toFixed(precision).split(".");
+    characteristic = insertThousandsSep(characteristic, thousandsSep, grouping);
+    if (precision && options.noTrailingZeros) {
+        mantissa = mantissa.replace(/0+$/, "");
     }
-    return formatted[1].length ? formatted.join(decimalPoint) : formatted[0];
+    return (mantissa && mantissa.length) ? [characteristic, mantissa].join(decimalPoint) : characteristic;
 }
 
 /**
@@ -284,8 +284,11 @@ export function formatMonetary(value, options = {}) {
             "currency_id";
         currencyId = options.data[currencyField] && options.data[currencyField].res_id;
     }
+    if (!currencyId) {
+        currencyId = Object.keys(session.currencies)[0];
+    }
     const currency = session.currencies[currencyId];
-    const digits = (currency && currency.digits) || options.digits;
+    const digits = options.digits || (currency && currency.digits);
 
     let formatted;
     if (options.humanReadable) {
@@ -294,13 +297,13 @@ export function formatMonetary(value, options = {}) {
         formatted = formatFloat(value, { digits });
     }
 
-    if (!currency || options.noSymbol) {
+    if (!currency || !formatted || options.noSymbol) {
         return formatted;
     }
     if (currency.position === "after") {
         return `${formatted} ${currency.symbol}`;
     } else {
-        return `${currency.symbol} ${formatted}`;
+        return `${currency.symbol}${formatted}`;
     }
 }
 

@@ -353,6 +353,11 @@ function formatMonetary(value, field, options) {
             var currency_field = options.currency_field || field.currency_field || 'currency_id';
             currency_id = options.data[currency_field] && options.data[currency_field].res_id;
         }
+        if (!currency_id) {
+            if (Object.keys(session.currencies).length === 1) {
+                currency_id = Object.keys(session.currencies)[0];
+            }
+        }
         currency = session.get_currency(currency_id);
     }
 
@@ -373,7 +378,7 @@ function formatMonetary(value, field, options) {
     if (options.forceString) {
         return val.join(' ');
     }
-    return utils.Markup(val.map((v) => _.escape(v)).join(NBSP));
+    return utils.Markup(val.map((v) => _.escape(v)).join(''));
 }
 /**
  * Returns a string representing the given value (multiplied by 100)
