@@ -524,9 +524,12 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                         filename = filename.rsplit("/odoo/addons/", 1)[1]
                     if count > expected:
                         msg = "Query count more than expected for user %s: %d > %d in %s at %s:%s"
-                        # add a subtest in order to continue the test_method in case of failures
-                        with self.subTest():
-                            self.fail(msg % (login, count, expected, funcname, filename, linenum))
+                        if os.environ.get('TEST_NO_FAIL_QUERY_COUNT'):
+                            _logger.warning(msg, login, count, expected, funcname, filename, linenum)
+                        else:
+                            # add a subtest in order to continue the test_method in case of failures
+                            with self.subTest():
+                                self.fail(msg % (login, count, expected, funcname, filename, linenum))
                     else:
                         logger = logging.getLogger(type(self).__module__)
                         msg = "Query count less than expected for user %s: %d < %d in %s at %s:%s"
