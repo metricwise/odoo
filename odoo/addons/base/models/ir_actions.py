@@ -38,6 +38,7 @@ class IrActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
+    view_description = fields.Html(string='View Description')
 
     def _compute_xml_id(self):
         res = self.get_external_id()
@@ -167,6 +168,7 @@ class IrActions(models.Model):
         return {
             "binding_model_id", "binding_type", "binding_view_types",
             "display_name", "help", "id", "name", "type", "xml_id",
+            "view_description",
         }
 
 
@@ -295,6 +297,7 @@ class IrActionsActWindow(models.Model):
         return super()._get_readable_fields() | {
             "context", "domain", "filter", "groups_id", "limit", "res_id",
             "res_model", "search_view", "search_view_id", "target", "view_id",
+            "view_description",
             "view_mode", "views",
             # `flags` is not a real field of ir.actions.act_window but is used
             # to give the parameters to generate the action

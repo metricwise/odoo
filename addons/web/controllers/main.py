@@ -282,6 +282,9 @@ def generate_views(action):
     # providing at least one view mode is a requirement, not an option
     view_modes = action['view_mode'].split(',')
 
+    # make sure the view_description is instantiated
+    view_description = action['view_description'] or False
+
     if len(view_modes) > 1:
         if view_id:
             raise ValueError('Non-db action dictionaries should provide '
@@ -291,7 +294,7 @@ def generate_views(action):
                 view_modes, view_id, action))
         action['views'] = [(False, mode) for mode in view_modes]
         return
-    action['views'] = [(view_id, view_modes[0])]
+    action['views'] = [(view_id, view_modes[0], view_description)]
 
 def fix_view_modes(action):
     """ For historical reasons, Odoo has weird dealings in relation to

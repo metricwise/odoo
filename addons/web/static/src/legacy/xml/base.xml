@@ -24,6 +24,13 @@
                     </li>
                 </ol>
             </div>
+            <div class="o_cp_top_center" t-if="props.withSearchBar">
+                <div t-if="props.withBreadcrumbs" class="breadcrumb" role="navigation">
+                    <div>
+                        <p t-esc="props.view_description"/>
+                    </div>
+                </div>
+            </div>
             <div class="o_cp_top_right">
                 <div class="o_cp_searchview"
                     role="search"

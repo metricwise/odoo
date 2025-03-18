@@ -256,6 +256,7 @@ var AbstractView = Factory.extend({
                 fields,
                 searchMenuTypes: params.searchMenuTypes,
                 view: this.fieldsView,
+                view_description: params.action.view_description || "",
                 views: params.action.views && params.action.views.filter(
                     v => v.multiRecord === this.multi_record
                 ),

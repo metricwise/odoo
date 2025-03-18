@@ -242,6 +242,7 @@ function makeActionManager(env) {
                 return {
                     jsId: controller.jsId,
                     name: controller.title || controller.action.name || env._t("Undefined"),
+                    view_description: controller.action.view_description || env._t("Undefined"),
                 };
             });
     }

@@ -159,6 +159,7 @@
                             <field name="name"/>
                             <field name="xml_id" string="External ID"/>
                             <field name="res_model" string="Object"/>
+                            <field name="view_description"/>
                         </group>
                         <group name="action_details">
                             <field name="usage"/>

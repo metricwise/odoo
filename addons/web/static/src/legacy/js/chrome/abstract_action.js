@@ -74,6 +74,7 @@ const AbstractAction = Widget.extend(ActionMixin, {
     init: function (parent, action, options) {
         this._super(parent);
         this._title = action.display_name || action.name;
+        this._viewDescription = action.view_description;
 
         this.searchModelConfig = {
             context: Object.assign({}, action.context),
