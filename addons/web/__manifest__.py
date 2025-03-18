@@ -529,4 +529,7 @@ This module provides the core of the Odoo Web Client.
     },
     'bootstrap': True,  # load translations for login screen,
     'license': 'LGPL-3',
+    'demo': [
+        'demo/demo.xml',
+    ],
 }
