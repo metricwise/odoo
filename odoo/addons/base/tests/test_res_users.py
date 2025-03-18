@@ -192,3 +192,10 @@ class TestUsers2(TransactionCase):
         # Verify that the read_group is raising an error if reified field is used as groupby
         with self.assertRaises(ValueError):
             User.read_group([], fnames + [reified_fname], [reified_fname])
+
+    def test_get_email_domain(self):
+        """ Check that _get_email_domain escapes wildcards """
+        User = self.env['res.users']
+        self.assertEqual(User._get_email_domain('\\bobs@example.com'), [('email', '=ilike', '\\\\bobs@example.com')], "backslashes should be escaped")
+        self.assertEqual(User._get_email_domain('%your@example.com'), [('email', '=ilike', '\\%your@example.com')], "percents should be escaped")
+        self.assertEqual(User._get_email_domain('_uncle@example.com'), [('email', '=ilike', '\\_uncle@example.com')], "underscores should be escaped")
