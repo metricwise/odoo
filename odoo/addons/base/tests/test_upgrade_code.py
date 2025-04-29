@@ -11,7 +11,7 @@ class TestCommand(BaseCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.odoo_bin = realpath(opj(__file__, '../../../../../odoo-bin'))
+        cls.odoo_bin = realpath(opj('/usr/bin/odoo')) # HACK source path differs from package path
 
     def run_command(self, *args, check=True, capture_output=True, text=True, **kwargs):
         return sp.run(
