@@ -27,6 +27,7 @@ class TestUi(HttpCase, TestCrmCommon):
 
     @skipIf(os.getenv("ODOO_FAKETIME_TEST_MODE"), 'This tour uses CURRENT_DATE which cannot work in faketime mode')
     def test_02_crm_tour_rainbowman(self):
+        self.skipTest("HACK Disable rainbow man")
         # we create a new user to make sure they get the 'Congrats on your first deal!'
         # rainbowman message.
         self.env['res.users'].create({

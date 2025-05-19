@@ -935,14 +935,22 @@ class TestPartnerForm(TransactionCase):
 
         # default is installed lang
         partner_form = Form(self.env['res.partner'], 'base.view_partner_form')
-        partner_form.name = "Test Company"
+        # HACK partner_firstname makes name readonly
+        if hasattr(self.env['res.partner'], 'lastname'):
+            partner_form.lastname = 'Test User'
+        else:
+            partner_form.name = 'Test Company'
         self.assertEqual(partner_form.lang, default_lang_code, "New partner's lang should be default one")
         partner = partner_form.save()
         self.assertEqual(partner.lang, default_lang_code)
 
         # check propagation of parent to child
         with partner_form.child_ids.new() as child:
-            child.name = "First Child"
+            # HACK partner_firstname makes name readonly
+            if hasattr(self.env['res.partner'], 'lastname'):
+                child.lastname = 'First Child'
+            else:
+                child.name = 'First Child'
             self.assertEqual(child.lang, default_lang_code, "Child contact's lang should have the same as its parent")
         partner = partner_form.save()
         self.assertEqual(partner.child_ids.lang, default_lang_code)
@@ -965,12 +973,20 @@ class TestPartnerForm(TransactionCase):
         partner_form.name = "Test Company"
         self.assertEqual(partner_form.lang, 'de_DE', "New partner's lang should take default from context")
         with partner_form.child_ids.new() as child:
-            child.name = "First Child"
+            # HACK partner_firstname makes name readonly
+            if hasattr(self.env['res.partner'], 'lastname'):
+                child.lastname = 'First Child'
+            else:
+                child.name = 'First Child'
             self.assertEqual(child.lang, 'de_DE', "Child contact's lang should be the same as its parent.")
         partner_form.lang = 'fr_FR'
         self.assertEqual(partner_form.lang, 'fr_FR', "New partner's lang should take user input")
         with partner_form.child_ids.new() as child:
-            child.name = "Second Child"
+            # HACK partner_firstname makes name readonly
+            if hasattr(self.env['res.partner'], 'lastname'):
+                child.lastname = 'Second Child'
+            else:
+                child.name = 'Second Child'
             self.assertEqual(child.lang, 'fr_FR', "Child contact's lang should be the same as its parent.")
         partner = partner_form.save()
         self.assertEqual(partner.child_ids.mapped('lang'), ['de_DE', 'fr_FR'])
@@ -997,7 +1013,11 @@ class TestPartnerForm(TransactionCase):
         with Form(self.env['res.partner']) as partner_form:
             partner_form.parent_id = test_parent_partner
             partner_form.company_type = 'person'
-            partner_form.name = 'Philip'
+            # HACK partner_firstname makes name readonly
+            if hasattr(self.env['res.partner'], 'lastname'):
+                partner_form.lastname = 'Philip'
+            else:
+                partner_form.name = 'Philip'
             self.assertEqual(partner_form.user_id, test_parent_partner.user_id)
 
 
