@@ -101,6 +101,7 @@ export function useFullCalendar(refName, params) {
 
     onPatched(() => {
         instance.refetchEvents();
+        instance.refetchResources();
         instance.setOption("weekends", component.props.isWeekendVisible);
         if (params.weekNumbers && component.props.model.scale === "year") {
             instance.destroy();
