@@ -1152,17 +1152,25 @@ class Message(models.Model):
                 [("subtype_id.description", "ilike", search_term)],
             ])])
             res["count"] = self.search_count(domain)
-        if around is not None:
-            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
-            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
-        if before:
-            domain = expression.AND([domain, [('id', '<', before)]])
+
+        def _domain(message, date_oper, id_oper):
+            return expression.OR([
+                [('date', date_oper, message.date)],
+                expression.AND([
+                    [('date', '=', message.date)],
+                    [('id', id_oper, message.id)]])])
+
+        if around and (around := self.browse(around)):
+            messages_before = self.search(expression.AND([domain, _domain(around, '<', '<=')]), limit=limit // 2, order='date DESC, id DESC')
+            messages_after = self.search(expression.AND([domain, _domain(around, '>', '>')]), limit=limit // 2, order='date ASC, id ASC').sorted(lambda m: (m.date, m.id), reverse=True)
+            return {**res, "messages": (messages_after + messages_before)}
+        if before and (before := self.browse(before)):
+            domain = expression.AND([domain, _domain(before, '<', '<')])
+        if after and (after := self.browse(after)):
+            domain = expression.AND([domain, _domain(after, '>', '>')])
+        res["messages"] = self.search(domain, limit=limit, order='date ASC, id ASC' if after else 'date DESC, id DESC')
         if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
-            res["messages"] = res["messages"].sorted('id', reverse=True)
+            res["messages"] = res["messages"].sorted(lambda m: (m.date, m.id), reverse=True)
         return res
 
     def _message_notifications_to_store(self, store: Store):
