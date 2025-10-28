@@ -1304,7 +1304,7 @@ class MailThread(models.AbstractModel):
         self = self.with_context(attachments_mime_plainxml=True) # import XML attachments as text
         # postpone setting message_dict.partner_ids after message_post, to avoid double notifications
         original_partner_ids = message_dict.pop('partner_ids', [])
-        thread_id = False
+        thread = self.browse()
         for model, thread_id, custom_values, user_id, alias in routes or ():
             subtype_id = False
             related_user = self.env['res.users'].browse(user_id)
@@ -1374,9 +1374,10 @@ class MailThread(models.AbstractModel):
                 # postponed after message_post, because this is an external message and we don't want to create
                 # duplicate emails due to notifications
                 new_msg.write({'partner_ids': original_partner_ids})
-        return thread_id
+        return thread.with_env(self.env)
 
     @api.model
+    @api.returns('mail.thread', lambda value: value.id)
     def message_process(self, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
                         thread_id=None):
@@ -1445,8 +1446,7 @@ class MailThread(models.AbstractModel):
         if self._detect_loop_sender(message, msg_dict, routes):
             return
 
-        thread_id = self._message_route_process(message, msg_dict, routes)
-        return thread_id
+        return self._message_route_process(message, msg_dict, routes)
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
