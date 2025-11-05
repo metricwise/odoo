@@ -1629,6 +1629,12 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             'groups_id': [(6, 0, self.env.ref('account.group_account_invoice').ids)],
         })
 
+        if self.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            accountman.write({
+                'groups_id': [Command.link(self.env.ref('product_cost_security.group_product_edit_cost').id)],
+            })
+
         in_moves = self.env['stock.move'].create([{
             'name': 'IN move @%s' % p,
             'product_id': self.product.id,

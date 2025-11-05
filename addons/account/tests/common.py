@@ -272,6 +272,11 @@ class AccountTestInvoicingCommon(ProductCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
+
+        if cls.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            groups |= cls.env.ref('product_cost_security.group_product_edit_cost')
+
         return groups | cls.env.ref('account.group_account_manager') | cls.env.ref('account.group_account_user') \
             | cls.env.ref('account.group_validate_bank_account')
 

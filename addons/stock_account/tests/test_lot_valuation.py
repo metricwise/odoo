@@ -774,6 +774,13 @@ class TestLotValuation(TestStockValuationCommon):
             'email': 'inventory_user@gmail.com',
             'groups_id': [Command.set(self.env.ref('stock.group_stock_user').ids)],
         })
+
+        if self.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            inventory_user.write({
+                'groups_id': [Command.link(self.env.ref('product_cost_security.group_product_edit_cost').id)],
+            })
+
         customer = self.env['res.partner'].create({
             'name': 'Lovely customer'
         })
