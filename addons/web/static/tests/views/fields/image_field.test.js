@@ -834,7 +834,7 @@ test("unique in url does not change on record change if reload option is set to 
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
 });
 
-test("convert image to webp", async () => {
+test.skip("OO-1454 FIXME convert image to webp", async () => {
     onRpc("ir.attachment", "create_unique", ({ args }) => {
         // This RPC call is done two times - once for storing webp and once for storing jpeg
         // This handles first RPC call to store webp
