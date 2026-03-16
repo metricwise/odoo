@@ -894,7 +894,7 @@ class SaleOrder(models.Model):
         if not self.partner_id:
             return
 
-        partner = self.partner_id
+        partner = self.partner_id.sudo()
 
         # If partner has no warning, check its company
         if partner.sale_warn == 'no-message' and partner.parent_id:
