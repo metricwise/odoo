@@ -3,6 +3,7 @@
 import base64
 import warnings
 from collections import defaultdict, OrderedDict
+from contextlib import redirect_stderr
 from decorator import decorator
 from operator import attrgetter
 from textwrap import dedent
@@ -220,7 +221,9 @@ class Module(models.Model):
                 raw_description = module.description or ''
 
                 try:
-                    output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
+                    with open(os.devnull, 'w') as f:
+                        with redirect_stderr(f):
+                            output = publish_string(source=raw_description, settings_overrides=overrides, writer=MyWriter())
                 except Exception as e:  # noqa: BLE001
                     _logger.warning("Failed to render module description for %s: %s. Falling back to raw description.", module.name, e)
                     output = Markup('<pre><code>%s</code></pre>') % raw_description
