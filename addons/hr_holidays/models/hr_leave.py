@@ -958,22 +958,13 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             if holiday.leave_type_request_unit == 'hour':
                 allday_value = float_compare(holiday.number_of_days, 1.0, 1) >= 0
 
-            if allday_value:
-                # `start` and `stop` are not in UTC for allday events
-                leave_tz = timezone(holiday.tz) if holiday.tz else UTC
-                start_value = UTC.localize(holiday.date_from).astimezone(leave_tz).replace(tzinfo=None)
-                stop_value = UTC.localize(holiday.date_to).astimezone(leave_tz).replace(tzinfo=None)
-            else:
-                start_value = holiday.date_from
-                stop_value = holiday.date_to
-
             meeting_values = {
                 'name': meeting_name,
                 'duration': holiday.number_of_days * (holiday.resource_calendar_id.hours_per_day or HOURS_PER_DAY),
                 'description': holiday.notes,
                 'user_id': user.id,
-                'start': start_value,
-                'stop': stop_value,
+                'start': holiday.date_from,
+                'stop': holiday.date_to,
                 'allday': allday_value,
                 'privacy': 'confidential',
                 'event_tz': user.tz,
