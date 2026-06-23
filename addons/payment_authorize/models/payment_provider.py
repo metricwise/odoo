@@ -23,9 +23,9 @@ class PaymentProvider(models.Model):
         string="API Login ID", help="The ID solely used to identify the account with Authorize.Net",
         required_if_provider='authorize')
     authorize_transaction_key = fields.Char(
-        string="API Transaction Key", required_if_provider='authorize', groups='base.group_system')
+        string="API Transaction Key", required_if_provider='authorize', groups='account.group_account_manager')
     authorize_signature_key = fields.Char(
-        string="API Signature Key", required_if_provider='authorize', groups='base.group_system')
+        string="API Signature Key", required_if_provider='authorize', groups='account.group_account_manager')
     authorize_client_key = fields.Char(
         string="API Client Key",
         help="The public client key. To generate directly from Odoo or from Authorize.Net backend.")
