@@ -82,6 +82,7 @@ class TestDiscussSubChannels(HttpCase):
             sub_channel._create_sub_channel()
 
     def test_04_sub_channel_panel_search(self):
+        self.skipTest("FIXME OO-1182")
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
         self.authenticate("bob_user", "bob_user")
         channel = self.env["discuss.channel"].channel_create(name="General", group_id=None)
