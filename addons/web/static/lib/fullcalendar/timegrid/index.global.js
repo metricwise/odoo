@@ -233,30 +233,6 @@ FullCalendar.TimeGrid = (function (exports, core, internal$1, preact, internal$2
                     ],
                 });
             }
-            if (allDayContent) {
-                sections.push({
-                    type: 'body',
-                    key: 'all-day',
-                    syncRowHeights: true,
-                    chunks: [
-                        {
-                            key: 'axis',
-                            rowContent: (contentArg) => (preact.createElement("tr", { role: "presentation" }, this.renderTableRowAxis(contentArg.rowSyncHeights[0]))),
-                        },
-                        {
-                            key: 'cols',
-                            content: allDayContent,
-                        },
-                    ],
-                });
-                sections.push({
-                    key: 'all-day-divider',
-                    type: 'body',
-                    outerContent: ( // TODO: rename to cellContent so don't need to define <tr>?
-                    preact.createElement("tr", { role: "presentation", className: "fc-scrollgrid-section" },
-                        preact.createElement("td", { colSpan: 2, className: 'fc-timegrid-divider ' + context.theme.getClass('tableCellShaded') }))),
-                });
-            }
             let isNowIndicator = context.options.nowIndicator;
             sections.push({
                 type: 'body',
@@ -291,6 +267,31 @@ FullCalendar.TimeGrid = (function (exports, core, internal$1, preact, internal$2
                     },
                 ],
             });
+            // HACK manually moved to footer
+            if (allDayContent) {
+                sections.push({
+                    key: 'all-day-divider',
+                    type: 'body',
+                    outerContent: ( // TODO: rename to cellContent so don't need to define <tr>?
+                    preact.createElement("tr", { role: "presentation", className: "fc-scrollgrid-section" },
+                        preact.createElement("td", { colSpan: 2, className: 'fc-timegrid-divider ' + context.theme.getClass('tableCellShaded') }))),
+                });
+                sections.push({
+                    type: 'body',
+                    key: 'all-day',
+                    syncRowHeights: true,
+                    chunks: [
+                        {
+                            key: 'axis',
+                            rowContent: (contentArg) => (preact.createElement("tr", { role: "presentation" }, this.renderTableRowAxis(contentArg.rowSyncHeights[0]))),
+                        },
+                        {
+                            key: 'cols',
+                            content: allDayContent,
+                        },
+                    ],
+                });
+            }
             if (stickyFooterScrollbar) {
                 sections.push({
                     key: 'footer',
