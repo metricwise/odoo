@@ -63,11 +63,31 @@ def make_wrap_property(name):
     )
 
 
+class SMTP_AWS_SES(smtplib.SMTP_SSL):
+    def data(self, msg):
+        (code, msg) = super().data(msg)
+        if (code == 250) and (match := re.match(r'Ok\s+(.+)', msg.decode('utf-8'))):
+            self.message_id = f"<{match[1]}@{self.domain}>"
+        return (code, msg)
+
+    def send_message(self, message, smtp_from, smtp_to_list, mail_options=(), rcpt_options=()):
+        self.message_id = None
+        res = super().send_message(message, smtp_from, smtp_to_list, mail_options=mail_options, rcpt_options=rcpt_options)
+        if self.message_id:
+            del message['Message-Id']
+            message['Message-Id'] = self.message_id
+        return res
+
+
 class SMTPConnection:
     """Wrapper around smtplib.SMTP and smtplib.SMTP_SSL"""
     def __init__(self, server, port, encryption, context=None):
         if encryption == 'ssl':
-            self.__obj__ = smtplib.SMTP_SSL(server, port, timeout=SMTP_TIMEOUT, context=context)
+            if match := re.search(r'([^.]+)\.amazonaws\.com$', server):
+                self.__obj__ = SMTP_AWS_SES(server, port, timeout=SMTP_TIMEOUT, context=context)
+                self.__obj__.domain = f"{match[1]}.amazonses.com"
+            else:
+                self.__obj__ = smtplib.SMTP_SSL(server, port, timeout=SMTP_TIMEOUT, context=context)
         else:
             self.__obj__ = smtplib.SMTP(server, port, timeout=SMTP_TIMEOUT)
 
@@ -770,9 +790,8 @@ class IrMailServer(models.Model):
             return message['Message-Id']
 
         try:
-            message_id = message['Message-Id']
-
             smtp.send_message(message, smtp_from, smtp_to_list)
+            message_id = message['Message-Id']
 
             # do not quit() a pre-established smtp_session
             if not smtp_session:
