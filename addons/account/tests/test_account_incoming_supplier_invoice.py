@@ -370,8 +370,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         email_raw = self._get_raw_mail_message_str(xml, journal.alias_email)
         init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
 
-        move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
-        bill = self.env['account.move'].browse(move_id)
+        bill = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
 
         self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 1, "Failing XML should be attached to a chatter message")
 
@@ -381,8 +380,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         email_raw = self._get_raw_mail_message_str(image, journal.alias_email)
         init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
 
-        move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
-        bill = self.env['account.move'].browse(move_id)
+        bill = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
 
         self.assertEqual(bill.message_ids.attachment_ids.mapped('name'), [image.name], "Scanned image should be attached to a chatter message")
         self.assertFalse(bill.attachment_ids, "Scanned image should not be attached to the bill itself")
