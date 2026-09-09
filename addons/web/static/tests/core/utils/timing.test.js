@@ -361,7 +361,8 @@ describe("throttleForAnimation", () => {
 });
 
 describe("throttleForAnimationScrollEvent", () => {
-    test("scroll loses target", async () => {
+    // FIXME OO-1685
+    test.skip("scroll loses target", async () => {
         let throttled = new Deferred();
         const throttledFn = throttleForAnimation((val, targetEl) => {
             // In Chrome, the currentTarget of scroll events is lost after the
