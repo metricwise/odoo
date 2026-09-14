@@ -31,7 +31,7 @@ export const phoneField = {
 
 registry.category("fields").add("phone", phoneField);
 
-class FormPhoneField extends PhoneField {
+export class FormPhoneField extends PhoneField {
     static template = "web.FormPhoneField";
 }
 
