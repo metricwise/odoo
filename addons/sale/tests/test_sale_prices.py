@@ -429,6 +429,13 @@ class TestSalePrices(SaleCommon):
             'name': 'E.T',
             'login': 'hohoho',
         })
+
+        if self.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            user_in_other_company.write({
+                'groups_id': [Command.link(self.env.ref('product_cost_security.group_product_edit_cost').id)],
+            })
+
         with mute_logger('odoo.models.unlink'):
             self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({

@@ -77,6 +77,12 @@ class TestStockValuationBase(TransactionCase):
             'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]
         })
 
+        if cls.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            cls.inventory_user.write({
+                'groups_id': [Command.link(cls.env.ref('product_cost_security.group_product_edit_cost').id)],
+            })
+
         cls.stock_input_account, cls.stock_output_account, cls.stock_valuation_account, cls.expense_account, cls.stock_journal = _create_accounting_data(cls.env)
         cls.product1.categ_id.write({
             'property_stock_account_input_categ_id': cls.stock_input_account.id,
