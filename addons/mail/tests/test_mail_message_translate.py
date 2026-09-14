@@ -105,7 +105,7 @@ class TestTranslationController(HttpCaseWithUserDemo):
 
     def test_invalid_api_key(self):
         self.env["ir.config_parameter"].set_param("mail.google_translate_api_key", "INVALIDKEY")
-        self.authenticate("demo", "demo")
+        self.authenticate("admin", "admin") # FIXME HACK OO-1437
         result = self._mock_translation_request({"message_id": self.message.id})
         self.assertNotIn("body", result)
         self.assertNotIn("lang_name", result)
