@@ -248,6 +248,15 @@ class IrHttp(models.AbstractModel):
             raise http.SessionExpiredException("Session expired")
 
     @classmethod
+    def _auth_method_x_api_key(cls, auth_scope):
+        if not (key := request.httprequest.headers.get('x-api-key')):
+            raise AccessDenied("missing header x-api-key")
+        if not (uid := request.env['res.users.apikeys']._check_credentials(scope=auth_scope, key=key)):
+            raise AccessDenied("invalid x-api-key")
+        request.update_env(user=uid)
+        request.update_context(**request.env.user.context_get())
+
+    @classmethod
     def _auth_method_none(cls):
         request.env = api.Environment(request.env.cr, None, request.env.context)
 
@@ -260,16 +269,17 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _authenticate(cls, endpoint):
         auth = 'none' if http.is_cors_preflight(request, endpoint) else endpoint.routing['auth']
-        cls._authenticate_explicit(auth)
+        kwargs = {k: v for k, v in endpoint.routing.items() if k.startswith('auth_')}
+        cls._authenticate_explicit(auth, **kwargs)
 
     @classmethod
-    def _authenticate_explicit(cls, auth):
+    def _authenticate_explicit(cls, auth, **kwargs):
         try:
             if request.session.uid is not None:
                 if not security.check_session(request.session, request.env, request):
                     request.session.logout(keep_db=True)
                     request.env = api.Environment(request.env.cr, None, request.session.context)
-            getattr(cls, f'_auth_method_{auth}')()
+            getattr(cls, f'_auth_method_{auth}')(**kwargs)
         except (AccessDenied, http.SessionExpiredException, werkzeug.exceptions.HTTPException):
             raise
         except Exception:
