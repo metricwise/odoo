@@ -21,7 +21,11 @@ class TestFormCreate(TransactionCase):
             self.env.user.groups_id += self.env.ref('account.group_account_readonly')
             self.env.user.groups_id += self.env.ref('account.group_account_user')
         partner_form = Form(self.env['res.partner'])
-        partner_form.name = 'a partner'
+        # HACK partner_firstname makes name readonly
+        if hasattr(self.env['res.partner'], 'lastname'):
+            partner_form.lastname = 'a partner'
+        else:
+            partner_form.name = 'a partner'
         # YTI: Clean that brol
         if hasattr(self.env['res.partner'], 'property_account_payable_id'):
             property_account_payable_id = self.env['account.account'].create({

@@ -2476,7 +2476,7 @@ class HttpCase(TransactionCase):
             self.http_request_key = self.canonical_tag
             self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = self.http_request_key
 
-    def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
+    def start_tour(self, url_path, tour_name, step_delay=100, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
         optional delay between steps `step_delay`. Other arguments from
         `browser_js` can be passed as keyword arguments."""
