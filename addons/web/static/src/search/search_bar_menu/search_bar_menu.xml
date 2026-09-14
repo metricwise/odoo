@@ -142,18 +142,9 @@
                         <t t-if="favoriteItems.length">
                             <div role="separator" class="dropdown-divider"/>
                         </t>
-                        <t t-if="sharedFavoritesItems.length > 10">
-                            <AccordionItem class="'o_shared_favorites text-truncate'" description.translate="Shared filters">
-                                <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
-                                    <t t-call="web.SearchBarMenu.FavoriteItem" />
-                                </t>
-                            </AccordionItem>
-                        </t>
-                        <t t-else="">
                             <t t-foreach="sharedFavoritesItems" t-as="item" t-key="item.id">
                                 <t t-call="web.SearchBarMenu.FavoriteItem" />
                             </t>
-                        </t>
                         <div t-if="sharedFavoritesItems.length" role="separator" class="dropdown-divider"/>
                         <t t-set="currentGroup" t-value="null"/>
                         <t t-foreach="otherItems" t-as="item" t-key="item.key">
