@@ -1116,7 +1116,7 @@ export function makeActionManager(env, router = _router) {
      */
     function _executeActURLAction(action, options) {
         let url = action.url;
-        if (url && !(url.startsWith("http") || url.startsWith("/"))) {
+        if (url && !(url.startsWith("http") || url.startsWith("/") || url.startsWith("webcal://"))) {
             url = "/" + url;
         }
         if (action.target === "self") {
