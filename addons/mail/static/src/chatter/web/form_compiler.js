@@ -24,7 +24,13 @@ function compileChatter(node, params) {
     });
     const chatterContainerHookXml = createElement("div");
     chatterContainerHookXml.classList.add("o-mail-ChatterContainer", "o-mail-Form-chatter");
-    setAttributes(chatterContainerHookXml, { "t-if": "!__comp__.env.inDialog" });
+
+    // HACK OO-1569 Show chatter in Lead Sheet
+    const attrs = extractAttributes(node, ["show_in_dialog"]);
+    if (!attrs["show_in_dialog"]) {
+        setAttributes(chatterContainerHookXml, { "t-if": "!__comp__.env.inDialog" });
+    }
+
     append(chatterContainerHookXml, chatterContainerXml);
     return chatterContainerHookXml;
 }
