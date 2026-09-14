@@ -55,6 +55,11 @@ class TestConfigManager(TransactionCase):
             'gevent_port': 8072,
             'http_enable': True,
             'proxy_mode': False,
+            'proxy_x_for': 1,
+            'proxy_x_host': 1,
+            'proxy_x_port': 0,
+            'proxy_x_prefix': 0,
+            'proxy_x_proto': 1,
             'x_sendfile': False,
 
             # web
@@ -178,6 +183,11 @@ class TestConfigManager(TransactionCase):
             'gevent_port': 8012,
             'http_enable': False,
             'proxy_mode': True,
+            'proxy_x_for': 1,
+            'proxy_x_host': 1,
+            'proxy_x_port': 0,
+            'proxy_x_prefix': 0,
+            'proxy_x_proto': 1,
             'x_sendfile': True,
 
             # web
@@ -329,6 +339,11 @@ class TestConfigManager(TransactionCase):
             'pg_path': '',
             'pidfile': '',
             'proxy_mode': False,
+            'proxy_x_for': 1,
+            'proxy_x_host': 1,
+            'proxy_x_port': 0,
+            'proxy_x_prefix': 0,
+            'proxy_x_proto': 1,
             'reportgz': False,
             'screencasts': '',
             'screenshots': '/tmp/odoo_tests',
@@ -447,6 +462,11 @@ class TestConfigManager(TransactionCase):
             'gevent_port': 8012,
             'http_enable': False,
             'proxy_mode': True,
+            'proxy_x_for': 1,
+            'proxy_x_host': 1,
+            'proxy_x_port': 0,
+            'proxy_x_prefix': 0,
+            'proxy_x_proto': 1,
             'x_sendfile': True,
 
             # web
