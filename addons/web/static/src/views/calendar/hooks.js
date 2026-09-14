@@ -100,6 +100,9 @@ export function useFullCalendar(refName, params) {
     });
 
     onPatched(() => {
+        if (instance.refetchResources) {
+            instance.refetchResources();
+        }
         instance.refetchEvents();
         instance.setOption("weekends", component.props.isWeekendVisible);
         if (params.weekNumbers && component.props.model.scale === "year") {
