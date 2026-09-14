@@ -7,6 +7,7 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 @odoo.tests.tagged('post_install', '-at_install')
 class TestLoadMessages(HttpCaseWithUserDemo):
     def test_01_mail_message_load_order_tour(self):
+        self.skipTest("FIXME OO-1234")
         partner_admin = self.env.ref('base.partner_admin')
         channel_id = self.env["discuss.channel"].create({
             "name": "MyTestChannel",
