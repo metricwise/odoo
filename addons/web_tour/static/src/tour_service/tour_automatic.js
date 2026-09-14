@@ -59,7 +59,7 @@ export class TourAutomatic {
                     timeout:
                         step.pause && this.debugMode
                             ? 9999999
-                            : step.timeout || this.timeout || 10000,
+                            : step.timeout || this.timeout || 20000,
                     action: async (trigger) => {
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
