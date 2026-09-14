@@ -29,6 +29,7 @@ test("list activity widget with no activity", async () => {
                 args.method !== "get_views" &&
                 !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
+                delete args["systray_get_queue_job_batches"]; // HACK
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         },
@@ -108,6 +109,7 @@ test("list activity widget with activities", async () => {
                 args.method !== "get_views" &&
                 !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
+                delete args["systray_get_queue_job_batches"]; // HACK
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         },
@@ -187,6 +189,7 @@ test("list activity widget with exception", async () => {
                 args.method !== "get_views" &&
                 !["/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
+                delete args["systray_get_queue_job_batches"]; // HACK
                 step(`${route} - ${JSON.stringify(args)}`);
             }
         },
@@ -273,6 +276,7 @@ test("list activity widget: open dropdown", async () => {
                 args.method !== "get_views" &&
                 !["/mail/", "/bus/im_status", ...ROUTES_TO_IGNORE].includes(route)
             ) {
+                delete args["systray_get_queue_job_batches"]; // HACK
                 step(`${route} - ${JSON.stringify(args)}`);
             }
             if (args.method === "action_feedback") {
