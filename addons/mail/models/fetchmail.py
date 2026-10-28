@@ -231,11 +231,10 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     imap_server.select()
                     result, data = imap_server.search(None, '(UNSEEN)')
                     for num in data[0].split():
-                        res_id = None
                         result, data = imap_server.fetch(num, '(RFC822)')
                         imap_server.store(num, '-FLAGS', '\\Seen')
                         try:
-                            res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
+                            MailThread.with_context(**additionnal_context).message_process(server.object_id.model, data[0][1], save_original=server.original, strip_attachments=(not server.attach))
                         except Exception:
                             _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
                             failed += 1
@@ -266,9 +265,8 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         for num in range(1, min(MAX_POP_MESSAGES, num_messages) + 1):
                             (header, messages, octets) = pop_server.retr(num)
                             message = (b'\n').join(messages)
-                            res_id = None
                             try:
-                                res_id = MailThread.with_context(**additionnal_context).message_process(server.object_id.model, message, save_original=server.original, strip_attachments=(not server.attach))
+                                MailThread.with_context(**additionnal_context).message_process(server.object_id.model, message, save_original=server.original, strip_attachments=(not server.attach))
                                 pop_server.dele(num)
                             except Exception:
                                 _logger.info('Failed to process mail from %s server %s.', server.server_type, server.name, exc_info=True)
