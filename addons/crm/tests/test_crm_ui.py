@@ -15,6 +15,8 @@ class TestUi(HttpCase, TestCrmCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.user_admin').tour_enabled = False
+        # HACK Restore menu sequence for testing
+        cls.env.ref('crm.crm_menu_leads').sequence = 5
 
     def test_01_crm_tour(self):
         self.env["res.partner"].create({
