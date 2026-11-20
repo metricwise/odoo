@@ -5,6 +5,7 @@ from odoo.tests import TransactionCase
 
 from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo import Command
 
 
 class SalesTeamCommon(BaseCommon):
@@ -34,6 +35,13 @@ class SalesTeamCommon(BaseCommon):
             'notification_type': 'email',
             'groups_id': [(6, 0, cls.group_sale_manager.ids)],
         })
+
+        if cls.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            cls.sale_manager.write({
+                'groups_id': [Command.link(cls.env.ref('product_cost_security.group_product_edit_cost').id)],
+            })
+
         cls.sale_team = cls.env['crm.team'].create({
             'name': 'Test Sales Team',
         })

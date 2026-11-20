@@ -1733,6 +1733,13 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 self.ref('stock.group_stock_manager'),
                 self.ref('sales_team.group_sale_salesman')])]
         })
+
+        if self.env['ir.module.module'].search([('name', '=', 'product_cost_security')]).state == 'installed':
+            # OO-1216 Restore permissions reduced by product_cost_security for testing
+            inventory_admin_user.write({
+                'groups_id': [Command.link(self.env.ref('product_cost_security.group_product_edit_cost').id)],
+            })
+
         pick.with_user(inventory_admin_user).move_ids.write(
             {'quantity': 1, 'picked': True})
         Form.from_action(self.env(user=inventory_admin_user), pick.with_user(inventory_admin_user).button_validate())\
