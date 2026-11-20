@@ -116,6 +116,11 @@ registry.category("web_tour.tours").add("test_calendar_delete_tour", {
 
 registry.category("web_tour.tours").add("test_calendar_decline_tour", {
     steps: () => [
+        {
+            content: "Remove My Appointments filter",
+            trigger: ".o_cp_searchview .o_facet_remove",
+            run: "click",
+        },
         clickOnTheEvent,
         {
             content: "Delete the event",
@@ -131,6 +136,11 @@ registry.category("web_tour.tours").add("test_calendar_decline_tour", {
 
 registry.category("web_tour.tours").add("test_calendar_decline_with_everybody_filter_tour", {
     steps: () => [
+        {
+            content: "Remove My Appointments filter",
+            trigger: ".o_cp_searchview .o_facet_remove",
+            run: "click",
+        },
         {
             content: "Select filter (everybody)",
             trigger: 'div[data-value="all"] input',

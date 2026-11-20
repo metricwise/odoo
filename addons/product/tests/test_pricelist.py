@@ -243,7 +243,12 @@ class TestPricelist(ProductVariantsCommon):
         default_pricelist = self.env['product.pricelist'].search([('name', 'ilike', ' ')], limit=1)
 
         with Form(self.env['res.partner']) as partner_form:
-            partner_form.name = "test"
+            # HACK partner_firstname makes name readonly
+            if hasattr(self.env['res.partner'], 'lastname'):
+                partner_form.lastname = "test"
+            else:
+                partner_form.name = "test"
+
             self.assertEqual(partner_form.property_product_pricelist, default_pricelist)
 
             partner_form.country_id = self.env.ref('base.be')

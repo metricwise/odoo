@@ -270,7 +270,11 @@ class TestUsers2(TransactionCase):
 
         User = self.env['res.users']
         with Form(User, view='base.view_users_form') as UserForm:
-            UserForm.name = "Test User"
+            # HACK partner_firstname makes name readonly
+            if hasattr(self.env['res.partner'], 'lastname'):
+                UserForm.lastname = 'Test User'
+            else:
+                UserForm.name = 'Test User'
             UserForm.login = "test-user1"
             self.assertFalse(UserForm.email)
 
@@ -287,7 +291,11 @@ class TestUsers2(TransactionCase):
         """
         # use the specific views which has the pseudo-fields
         f = Form(self.env['res.users'], view='base.view_users_form')
-        f.name = "bob"
+        # HACK partner_firstname makes name readonly
+        if hasattr(self.env['res.partner'], 'lastname'):
+            f.lastname = 'bob'
+        else:
+            f.name = 'bob'
         f.login = "bob"
         user = f.save()
 
@@ -386,7 +394,11 @@ class TestUsers2(TransactionCase):
         # <group col="4" invisible="sel_groups_1_9_10 != 1" groups="base.group_no_one" class="o_label_nowrap">
         with self.debug_mode():
             user_form = Form(self.env['res.users'], view='base.view_users_form')
-        user_form.name = "Test"
+        # HACK partner_firstname makes name readonly
+        if hasattr(self.env['res.partner'], 'lastname'):
+            user_form.lastname = 'Test'
+        else:
+            user_form.name = 'Test'
         user_form.login = "Test"
         self.assertFalse(user_form.share)
 
